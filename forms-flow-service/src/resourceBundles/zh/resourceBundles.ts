@@ -451,6 +451,18 @@ export const RESOURCE_BUNDLES_ZH = {
   "Error in submission count": "提交计数错误",
   "Permission for submission tracking.": "提交跟踪权限",
   "Reviewer Permission": "审阅者权限",
-  "Client Permission": "客户权限"
+  "Client Permission": "客户权限",
+  "Your form is now ready!": "您的表单现在已准备好！",
+  "You can preview the design and further build on top  or edit it from the drag and drop designer.": "您可以预览设计并在其上进一步构建，或从拖放设计器中进行编辑。",
+  "I'm here to provide further assistance. Thank you!": "我在这里提供进一步的帮助。谢谢！",
+  "Type promt here": "在此处输入提示",
+  "Restart": "重新启动",
+  "Generate Form Design": "生成表单设计",
+  "Would you like to continue?": "您想继续吗？",
+  "preview": "预览",
+  "Please give us all the specifications and requirements you have in mind for your form. After you have finished the description, press enter.": "请告诉我们您对表单的所有规格和要求。完成描述后，请按回车键。",
+  "For example'Give us a form that will serve as a patient intake form for walk-in clinics'": "例如'为我们提供一个可用于门诊诊所患者接诊表的表单'",
+  "I can help you design forms effortlessly- all you have to do is give me a clear and concise description of what the form is meant to do. I will build out the fields and layout for you,which you can further customize.": "我可以帮助您轻松设计表单-您只需清晰简洁地描述表单的预期用途即可。我将为您构建字段和布局，您可以进一步自定义。",
+  "I am": "我是"
 };
 

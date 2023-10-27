@@ -455,6 +455,17 @@ export const RESOURCE_BUNDLES_DE = {
     "Error in submission count": "Fehler in der Einreichungszählung",
     "Permission for submission tracking.": "Berechtigung für die Einreichungsverfolgung.",
     "Reviewer Permission": "Berechtigung des Reviewers",
-    "Client Permission": "Berechtigung des Kunden"
-      
+    "Client Permission": "Berechtigung des Kunden",
+    "Your form is now ready!": "Ihr Formular ist jetzt bereit!",
+    "You can preview the design and further build on top  or edit it from the drag and drop designer.": "Sie können das Design vorab anzeigen und es weiterentwickeln oder es aus dem Drag-and-Drop-Designer bearbeiten.",
+   "I'm here to provide further assistance. Thank you!": "Ich stehe Ihnen gerne für weitere Unterstützung zur Verfügung. Vielen Dank!",
+   "Type promt here": "Geben Sie hier den Hinweis ein",
+   "Restart": "Neustart",
+   "Generate Form Design": "Formulardesign generieren",
+   "Would you like to continue?": "Möchten Sie fortfahren?",
+   "preview": "Vorschau",
+   "Please give us all the specifications and requirements you have in mind for your form. After you have finished the description, press enter.": "Bitte geben Sie uns alle Spezifikationen und Anforderungen, die Sie für Ihr Formular im Kopf haben. Nachdem Sie die Beschreibung abgeschlossen haben, drücken Sie die Eingabetaste.",
+   "For example'Give us a form that will serve as a patient intake form for walk-in clinics'": "Zum Beispiel 'Geben Sie uns ein Formular, das als Anmeldeformular für Patienten in Walk-In-Kliniken dient'.",
+   "I can help you design forms effortlessly- all you have to do is give me a clear and concise description of what the form is meant to do. I will build out the fields and layout for you,which you can further customize.": "Ich kann Ihnen helfen, Formulare mühelos zu gestalten - alles, was Sie tun müssen, ist mir eine klare und prägnante Beschreibung dessen zu geben, wofür das Formular gedacht ist. Ich werde die Felder und das Layout für Sie erstellen, die Sie weiter anpassen können.",
+   "I am": "Ich bin"    
 };

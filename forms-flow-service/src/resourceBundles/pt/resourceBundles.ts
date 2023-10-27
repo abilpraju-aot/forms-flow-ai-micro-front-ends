@@ -453,5 +453,17 @@ export const RESOURCE_BUNDLES_PT = {
     "Error in submission count": "Erro na contagem de submissões",
     "Permission for submission tracking.": "Permissão para rastreamento de submissões.",
     "Reviewer Permission": "Permissão do Revisor",
-    "Client Permission": "Permissão do Cliente"
+    "Client Permission": "Permissão do Cliente",
+    "Your form is now ready!": "Seu formulário está pronto!",
+    "You can preview the design and further build on top  or edit it from the drag and drop designer.": "Você pode visualizar o design e continuar a construir por cima ou editá-lo a partir do designer de arrastar e soltar.",
+    "I'm here to provide further assistance. Thank you!": "Estou aqui para fornecer assistência adicional. Obrigado!",
+    "Type promt here": "Digite o prompt aqui",
+    "Restart": "Reiniciar",
+    "Generate Form Design": "Gerar Design do Formulário",
+    "Would you like to continue?": "Gostaria de continuar?",
+    "preview": "visualização",
+    "Please give us all the specifications and requirements you have in mind for your form. After you have finished the description, press enter.": "Por favor, nos forneça todas as especificações e requisitos que você tem em mente para o seu formulário. Depois de terminar a descrição, pressione Enter.",
+    "For example'Give us a form that will serve as a patient intake form for walk-in clinics'": "Por exemplo, 'Nos dê um formulário que servirá como um formulário de admissão de pacientes para clínicas sem necessidade de agendamento'.",
+    "I can help you design forms effortlessly- all you have to do is give me a clear and concise description of what the form is meant to do. I will build out the fields and layout for you,which you can further customize.": "Posso ajudar você a projetar formulários sem esforço - tudo o que você precisa fazer é me fornecer uma descrição clara e concisa do que o formulário deve fazer. Vou criar os campos e o layout para você, que você pode personalizar ainda mais.",
+    "I am": "Eu sou"
 };

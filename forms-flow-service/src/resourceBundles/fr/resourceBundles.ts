@@ -454,7 +454,19 @@ export const RESOURCE_BUNDLES_FR = {
   "Error in submission count": "Erreur dans le comptage des soumissions",
   "Permission for submission tracking.": "Permission de suivi des soumissions.",
   "Reviewer Permission": "Permission du Réviseur",
-  "Client Permission": "Permission du Client"
+  "Client Permission": "Permission du Client",
+  "Your form is now ready!": "Votre formulaire est maintenant prêt !",
+  "You can preview the design and further build on top  or edit it from the drag and drop designer.": "Vous pouvez prévisualiser la conception et continuer à construire par-dessus ou la modifier à partir du concepteur de glisser-déposer.",
+  "I'm here to provide further assistance. Thank you!": "Je suis ici pour fournir une assistance supplémentaire. Merci !",
+  "Type promt here": "Tapez le prompt ici",
+  "Restart": "Redémarrer",
+  "Generate Form Design": "Générer la conception du formulaire",
+  "Would you like to continue?": "Souhaitez-vous continuer ?",
+  "preview": "prévisualisation",
+  "Please give us all the specifications and requirements you have in mind for your form. After you have finished the description, press enter.": "Veuillez nous donner toutes les spécifications et exigences que vous avez en tête pour votre formulaire. Après avoir terminé la description, appuyez sur Entrée.",
+  "For example'Give us a form that will serve as a patient intake form for walk-in clinics'": "Par exemple 'Donnez-nous un formulaire qui servira de formulaire d'admission pour les cliniques sans rendez-vous'.",
+  "I can help you design forms effortlessly- all you have to do is give me a clear and concise description of what the form is meant to do. I will build out the fields and layout for you,which you can further customize.": "Je peux vous aider à concevoir des formulaires sans effort - il vous suffit de me donner une description claire et concise de ce que le formulaire est censé faire. Je vais construire les champs et la mise en page pour vous, que vous pouvez personnaliser davantage.",
+  "I am": "Je suis"
 };
 
 

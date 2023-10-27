@@ -451,5 +451,17 @@ export const RESOURCE_BUNDLES_BG = {
    "Error in submission count": "Грешка в броя на Подаванията",
    "Permission for submission tracking.": "Разрешение за проследяване на Подаванията.",
    "Reviewer Permission": "Права на рецензент",
-   "Client Permission": "Права на клиент"
+   "Client Permission": "Права на клиент",
+   "Your form is now ready!": "Вашият формуляр вече е готов!",
+   "You can preview the design and further build on top  or edit it from the drag and drop designer.": "Можете да прегледате дизайна и да продължите да строите отгоре или да го редактирате от дизайнера с плъзгане и пускане.",
+   "I'm here to provide further assistance. Thank you!": "Аз съм тук, за да предоставя допълнителна помощ. Благодаря ви!",
+   "Type promt here": "Въведете подсказка тук",
+   "Restart": "Рестартирай",
+   "Generate Form Design": "Генерирай дизайн на формуляра",
+   "Would you like to continue?": "Искате ли да продължите?",
+   "preview": "преглед",
+   "Please give us all the specifications and requirements you have in mind for your form. After you have finished the description, press enter.": "Моля, дайте ни всички спецификации и изисквания, които имате предвид за вашия формуляр. След като завършите описанието, натиснете Enter.",
+   "For example'Give us a form that will serve as a patient intake form for walk-in clinics'": "Например 'Дайте ни формуляр, който ще служи като формуляр за прием на пациенти за клиники без предварително записване'.",
+   "I can help you design forms effortlessly- all you have to do is give me a clear and concise description of what the form is meant to do. I will build out the fields and layout for you,which you can further customize.": "Мога да ви помогна да проектирате формуляри без усилие - всичко, което трябва да направите, е да ми дадете ясно и кратко описание на това, за какво е предназначена формата. Аз ще изградя полетата и оформлението за вас, което можете да персонализирате допълнително.",
+   "I am": "Аз съм"
   };

@@ -453,7 +453,19 @@ export const RESOURCE_BUNDLES_EN = {
   "Error in submission count":"Error in submission count",
   "Permission for submission tracking." : "Permission for submission tracking.",
   "Reviewer Permission": "Reviewer Permission",
-  "Client Permission": "Client Permission"
+  "Client Permission": "Client Permission",
+  "Your form is now ready!": "Your form is now ready!",
+  "You can preview the design and further build on top  or edit it from the drag and drop designer.": "You can preview the design and further build on top  or edit it from the drag and drop designer.",
+  "I'm here to provide further assistance. Thank you!": "I'm here to provide further assistance. Thank you!",
+  "Type promt here": "Type promt here",
+  "Restart": "Restart",
+  "Generate Form Design": "Generate Form Design",
+  "Would you like to continue?": "Would you like to continue?",
+  "preview": "preview",
+  "Please give us all the specifications and requirements you have in mind for your form. After you have finished the description, press enter.": "Please give us all the specifications and requirements you have in mind for your form. After you have finished the description, press enter.",
+  "For example'Give us a form that will serve as a patient intake form for walk-in clinics'": "For example'Give us a form that will serve as a patient intake form for walk-in clinics'",
+  "I can help you design forms effortlessly- all you have to do is give me a clear and concise description of what the form is meant to do. I will build out the fields and layout for you,which you can further customize.": "I can help you design forms effortlessly- all you have to do is give me a clear and concise description of what the form is meant to do. I will build out the fields and layout for you,which you can further customize.",
+  "I am": "I am"
 };
 
 
