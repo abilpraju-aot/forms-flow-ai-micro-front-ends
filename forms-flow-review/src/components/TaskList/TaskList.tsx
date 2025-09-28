@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import {
   resetTaskListParams,
   setBPMFilterList,
@@ -32,9 +32,8 @@ import { useTranslation } from "react-i18next";
 import TaskListDropdownItems from "./TaskFilterDropdown";
 import { RootState } from "../../reducers";
 import TaskListTable from "./TasklistTable";
-import { HelperServices } from "@formsflow/service";
 import AttributeFilterDropdown from "./AttributeFilterDropdown";
-import { createReqPayload ,sortableKeysSet} from "../../helper/taskHelper";
+import { createReqPayload, sortableKeysSet, generateResetSortOrders, ENABLED_SORT_FIELDS } from "../../helper/taskHelper";
 import { buildDynamicColumns, optionSortBy } from "../../helper/tableHelper";
 import  useAllTasksPayload  from "../../constants/allTasksPayload";
 import { userRoles } from "../../helper/permissions";
@@ -122,14 +121,12 @@ const TaskList = () => {
    * If not, set the default filter manually and use it immediately (do not rely on updated Redux state)
    */
   let payload = null;
-  const enabledSort = new Set ([
-    "applicationId",
-    "submitterName",
-    "formName"
-  ])
+  
   // check if selectedType belongs to sortableList
-  const currentVariable = taskvariables.find((item)=> item.key === filterListSortParams?.activeKey);
-  const isFormVariable =currentVariable?.isFormVariable || enabledSort.has(filterListSortParams?.activeKey) ;
+  const originalActiveKey = filterListSortParams?.activeKey?.split('|')[0];
+  const currentVariable = taskvariables.find((item)=> item.key === originalActiveKey);
+  const isFormVariable = currentVariable?.isFormVariable || ENABLED_SORT_FIELDS.has(originalActiveKey);
+  
   if (filterCached) {
     payload = lastReqPayload;
     dispatch(resetTaskListParams({ filterCached: false }));
@@ -162,30 +159,43 @@ const TaskList = () => {
     fetchTaskListData();
   };
 
-  const handleSortApply = (selectedSortOption, selectedSortOrder) => {
-    // reset the sort orders using helper function
-    const resetSortOrders = HelperServices.getResetSortOrders(optionSortBy.options);
+  const handleSortApply = useCallback((selectedSortOption, selectedSortOrder) => {
+    // Generate reset sort orders in the new format
+    const resetSortOrders = generateResetSortOrders(optionSortBy.options);
   
-    // get the variable info first
-    const selectedVar = taskvariables.find(item => item.key === selectedSortOption);
-    const selectedType = selectedVar?.type;
-  
-    // check if it's a form variable
-    const isFormVariable = sortableKeysSet.has(selectedType);
+    // Extract original key and determine if it's a form variable
+    let originalKey, isFormVariable;
+    
+    if (selectedSortOption.includes('|')) {
+      // New format, extract the original key
+      originalKey = selectedSortOption.split('|')[0];
+      isFormVariable = selectedSortOption.includes('|form');
+    } else {
+      // Fallback for old format
+      originalKey = selectedSortOption;
+      isFormVariable = false; // Assume static if no format specified
+    }
+    
+    // Generate the column key (this should match the activeKey format)
+    const columnKey = `${originalKey}${isFormVariable ? "|form" : "|static"}`;
+    
+    // Get type for form variables
+    const selectedVar = taskvariables.find(item => item.key === originalKey);
+    const type = selectedVar?.type;
   
     const updatedData = {
       ...resetSortOrders,
-      activeKey: selectedSortOption,
-      [selectedSortOption]: {
+      activeKey: columnKey,
+      [columnKey]: {
         sortOrder: selectedSortOrder,
-        ...(isFormVariable && { type: selectedType })
+        ...(isFormVariable && { type })
       },
     };
   
     dispatch(setFilterListSortParams(updatedData));
     setShowSortModal(false);
     fetchTaskListData({ sortData: updatedData  });
-  };
+  }, [taskvariables, dispatch]);
   
 
   const handleDateRangeChange = (newDateRange) => {
@@ -236,21 +246,47 @@ const TaskList = () => {
     fetchTaskListData();
   }, [isAssigned, activePage, limit]);
 
-  const optionsForSortModal = () => {
+  const optionsForSortModal = useMemo(() => {
     const existingValues = new Set(optionSortBy.keys);  
     const dynamicColumns = buildDynamicColumns(taskvariables);
   
+    // Create a map to track which static columns we've already included
+    const includedStaticColumns = new Set();
+    
     const filteredDynamicColumns = dynamicColumns
-      .filter(column =>
-      !existingValues.has(column.sortKey) && // filter out duplicates form sorting list 
-      sortableKeysSet.has(column.type))  // sorting enabled only for sortablelist items and optionSortBy
-      .map(column => ({
-        value: column.sortKey,
-        label: column.name,
-      }));
+      .filter(column => {
+        const isFormVariable = column.isFormVariable;
+        const isStaticColumn = existingValues.has(column.sortKey);
+        
+        // Include if it's a form variable OR if it's not a duplicate static column
+        const shouldInclude = isFormVariable || !isStaticColumn;
+        
+        return shouldInclude && sortableKeysSet.has(column.type);
+      })
+      .map(column => {
+        // For form variables, use a unique key to distinguish from static columns
+        const uniqueKey = column.isFormVariable 
+          ? `${column.sortKey}|form` 
+          : column.sortKey;
+        
+        return {
+          value: uniqueKey, // Use unique key for form variables
+          label: column.name,
+          originalSortKey: column.sortKey, // Keep original for reference
+          isFormVariable: column.isFormVariable
+        };
+      });
   
-    return [...optionSortBy.options, ...filteredDynamicColumns];
-  };
+    // Add static columns with their new format keys to match activeKey format
+    const staticOptions = optionSortBy.options.map(option => ({
+      value: `${option.value}|static`, // Use new format to match activeKey
+      label: option.label,
+      originalSortKey: option.value,
+      isFormVariable: false
+    }));
+  
+    return [...staticOptions, ...filteredDynamicColumns];
+  }, [taskvariables]);
   
   return (
     <>
@@ -302,12 +338,12 @@ const TaskList = () => {
                 handleRefresh={handleRefresh}
                 handleSortModalClose={toggleFilterModal}
                 handleSortApply={handleSortApply}
-                defaultSortOption={filterListSortParams?.activeKey}
+                defaultSortOption={filterListSortParams?.activeKey || "created"}
                 defaultSortOrder={
                   filterListSortParams?.[filterListSortParams?.activeKey]
                     ?.sortOrder ?? "asc"
                 }
-                optionSortBy={optionsForSortModal()}
+                optionSortBy={optionsForSortModal}
                 filterDataTestId="task-list-filter"
                 filterAriaLabel={t("Filter the task list")}
                 refreshDataTestId="task-list-refresh"

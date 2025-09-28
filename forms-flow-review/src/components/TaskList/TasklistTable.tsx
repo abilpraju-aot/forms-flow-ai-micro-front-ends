@@ -5,7 +5,7 @@ import {
   TableFooter,
 } from "@formsflow/components";
 import { HelperServices } from "@formsflow/service";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { batch, useDispatch, useSelector } from "react-redux";
 import { isEqual, cloneDeep } from "lodash";
@@ -23,7 +23,7 @@ import {
 } from "../../api/services/filterServices";
 import TaskAssigneeManager from "../Assigne/Assigne";
 import { buildDynamicColumns, optionSortBy } from "../../helper/tableHelper";
-import { createReqPayload,sortableKeysSet } from "../../helper/taskHelper";
+import { createReqPayload, sortableKeysSet, generateResetSortOrders, ENABLED_SORT_FIELDS } from "../../helper/taskHelper";
 import { removeTenantKey } from "../../helper/helper";
 import Loading from "../Loading/Loading";
 
@@ -146,13 +146,13 @@ return matchingVar.value ?? "-";
   // Constants
   const SORTABLE_COLUMNS = optionSortBy.keys;
 
-  const PAGE_SIZE_OPTIONS = [
+  const PAGE_SIZE_OPTIONS = useMemo(() => [
     { text: "5", value: 5 },
     { text: "25", value: 25 },
     { text: "50", value: 50 },
     { text: "100", value: 100 },
     { text: "All", value: tasksCount },
-  ];
+  ], [tasksCount]);
 
   /**
    * checking is column is sortable 
@@ -161,7 +161,7 @@ return matchingVar.value ?? "-";
 
 
 
-  const handleColumnResize = (column: Column, newWidth: number) => {
+  const handleColumnResize = useCallback((column: Column, newWidth: number) => {
     /**
      * this function handle column resize
      * It updates the width of the column in the selected filter's variables
@@ -175,8 +175,7 @@ return matchingVar.value ?? "-";
       return variable;
     });
     dispatch(resetTaskListParams({selectedFilter:{ ...updatedData, variables }}));
-
-  };
+  }, [selectedFilter, dispatch]);
 
   useEffect(() => {
     const dynamicColumns = buildDynamicColumns(taskvariables);
@@ -189,11 +188,14 @@ return matchingVar.value ?? "-";
     });
   }, [taskvariables]);
 
-  const getCellAriaLabel = (column, task) => {
+  const getCellAriaLabel = useCallback((column, task) => {
     const columnName = t(column.name);
     const cellValue = getCellValue(column, task);
     return `${columnName}: ${cellValue}`;
-  };
+  }, [t]);
+// Utility: unique column key
+const getColumnKey = (column) =>
+  `${column.sortKey}${column.isFormVariable ? "|form" : "|static"}`;
 
 
   // Render Functions
@@ -212,10 +214,10 @@ return matchingVar.value ?? "-";
       <>
         {column.name ? (
           <th
-            key={`header-${column.sortKey ?? index}`}
+            key={`header-${getColumnKey(column)}`}
             className={!isSortableHeader? "header-sortable" : ""}
             style={{ 'minWidth': column.width, 'maxWidth': column.width }}
-            data-testid={`column-header-${column.sortKey ?? "actions"}`}
+            data-testid={`column-header-${getColumnKey(column)}`}
           aria-label={`${t(column.name)} ${t("column")}${
             !isSortableHeader ? ", " + t("sortable") : ""
               }`}
@@ -226,8 +228,8 @@ return matchingVar.value ?? "-";
           </th>
         ) : (
           <th
-            key={`header-${column.sortKey ?? index}`}
-            data-testid={`column-header-${column.sortKey ?? "actions"}`}
+            key={`header-${getColumnKey(column)}`}
+            data-testid={`column-header-${getColumnKey(column)}`}
           aria-label={`${t(column.name)} ${t("column")}${
             !isSortableHeader ? ", " + t("sortable") : ""
               }`}
@@ -240,26 +242,23 @@ return matchingVar.value ?? "-";
       </>
     );
   };
-  const handleSort = (column) => {
-      dispatch(setBPMTaskLoader(true));
-    const resetSortOrders = HelperServices.getResetSortOrders(
-      optionSortBy.options
-    );
-    const enabledSort = new Set ([
-      "applicationId",
-      "submitterName",
-      "formName"
-    ])
+  const handleSort = useCallback((column) => {
+    dispatch(setBPMTaskLoader(true));
+    
+    // Generate reset sort orders in the new format
+    const resetSortOrders = generateResetSortOrders(optionSortBy.options);
+    
+    const columnKey = getColumnKey(column);
     const updatedFilterListSortParams = {
       ...resetSortOrders,
-      [column.sortKey]: {
+      [columnKey]: {
         sortOrder:
-          filterListSortParams[column.sortKey]?.sortOrder === "asc" ? "desc" : "asc",
-          ...((column.isFormVariable || enabledSort.has(column.sortKey)) && {
-            type: column.type ,
-          })
+          filterListSortParams[columnKey]?.sortOrder === "asc" ? "desc" : "asc",
+        ...((column.isFormVariable || ENABLED_SORT_FIELDS.has(column.sortKey)) && {
+          type: column.type,
+        })
       },
-      activeKey: column.sortKey,
+      activeKey: columnKey,
     };
 
     dispatch(setFilterListSortParams(updatedFilterListSortParams));
@@ -272,7 +271,7 @@ return matchingVar.value ?? "-";
       column.isFormVariable
     );
     dispatch(fetchServiceTaskList(payload, null, activePage, limit));
-  };
+  }, [selectedFilter, selectedAttributeFilter, filterListSortParams, dateRange, isAssigned, activePage, limit, dispatch]);
 
   const renderHeaderContent = (column) => {
     //If the header is for the View button or the variable type is null, then there should be no sorting option for those columns.
@@ -284,14 +283,17 @@ return matchingVar.value ?? "-";
         </span>
       )
     }
+    
+    const columnKey = getColumnKey(column);
+    
     return (
       <SortableHeader
         className="header-sortable"
-        columnKey={column.sortKey}
+        columnKey={columnKey}
         title={t(column.name)}
         currentSort={filterListSortParams}
         handleSort={() => handleSort(column)}
-        dataTestId={`sort-header-${column.sortKey}`}
+        dataTestId={`sort-header-${columnKey}`}
         ariaLabel={t("Sort by {{columnName}}", {
           columnName: t(column.name),
         })}
@@ -303,7 +305,7 @@ return matchingVar.value ?? "-";
     <div
       className={`column-resizer ${isResizing ? "resizing" : ""}`}
       onMouseDown={(e) => handleMouseDown(index, column, e)}
-      data-testid={`column-resizer-${column.sortKey}`}
+      data-testid={`column-resizer-${getColumnKey(column)}`}
       aria-label={t("Resize {{columnName}} column", {
         columnName: t(column.name),
       })}
@@ -345,8 +347,8 @@ return matchingVar.value ?? "-";
 
   const renderDataCell = (task, column, colIndex) => (
     <td
-      key={`cell-${task.id}-${column.sortKey}-${colIndex}`}
-      data-testid={`task-${task.id}-${column.sortKey}`}
+      key={`cell-${task.id}-${getColumnKey(column)}-${colIndex}`}
+      data-testid={`task-${task.id}-${getColumnKey(column)}`}
       aria-label={getCellAriaLabel(column, task)}
     >
       {column.sortKey == "assignee" ? (

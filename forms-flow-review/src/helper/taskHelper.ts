@@ -31,6 +31,26 @@ import { cloneDeep } from "lodash";
 }; 
 export const sortableKeysSet = new Set(Object.keys(sortableList));
 
+// Constants for sort column types
+export const ENABLED_SORT_FIELDS = new Set([
+  "applicationId",
+  "submitterName", 
+  "formName"
+]);
+
+/**
+ * Generate reset sort orders in the new key format
+ * @param options - Array of sort options with value and label
+ * @returns Object with reset sort orders in new format
+ */
+export const generateResetSortOrders = (options) => {
+  return options.reduce((acc, option) => {
+    const key = `${option.value}|static`;
+    acc[key] = { sortOrder: "asc" };
+    return acc;
+  }, {});
+};
+
 export const createReqPayload = (
   selectedFilter,
   selectedAttributeFilter,
@@ -53,20 +73,16 @@ export const createReqPayload = (
   };
   // here we are taking the sorting from filterListsortparams instead of taking of inside the selectedFilter
 
-// Adding sorting for these fields (not considered form variables)
-  const enabledSort = new Set ([
-    "applicationId",
-    "submitterName",
-    "formName"
-  ])
-
+  // Extract original sortKey from the new format (e.g., "created|static" -> "created")
+  const originalSortKey = filterListSortParams?.activeKey?.split('|')[0];
+  
   // Build sort filter
-  const newFilter = isFormVariable || enabledSort.has(filterListSortParams?.activeKey)
+  const newFilter = isFormVariable || ENABLED_SORT_FIELDS.has(originalSortKey)
     ? {
         sortBy: "processVariable",
         sortOrder: filterListSortParams?.[filterListSortParams?.activeKey]?.sortOrder,
         parameters: {
-          variable: filterListSortParams?.activeKey, 
+          variable: originalSortKey, 
           type:
           sortableList[
               filterListSortParams?.[filterListSortParams?.activeKey]?.type
@@ -76,7 +92,7 @@ export const createReqPayload = (
         },
       }
     : {
-        sortBy: filterListSortParams?.activeKey,
+        sortBy: originalSortKey,
         sortOrder:
           filterListSortParams?.[filterListSortParams?.activeKey]?.sortOrder,
       };
