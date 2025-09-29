@@ -17,7 +17,7 @@ import {
   getSubmission,
   Formio,
   resetSubmission,
-} from "@aot-technologies/formio-react";
+} from "react-formio";
 import { BackToPrevIcon, CustomButton } from "@formsflow/components";
 import {
   getFormIdSubmissionIdFromURL,

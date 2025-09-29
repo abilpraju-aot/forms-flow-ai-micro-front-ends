@@ -4,7 +4,7 @@ import {
   selectRoot,
   selectError,
   Form,
-} from "@aot-technologies/formio-react";
+} from "react-formio";
 import Loading from "./Loading";
 import { RESOURCE_BUNDLES_DATA } from "../resourceBundles/i18n";
 import {

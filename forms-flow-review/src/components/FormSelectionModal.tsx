@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { useTranslation } from "react-i18next";
 import { CloseIcon, CustomSearch, CustomButton } from "@formsflow/components";
-import { Form } from "@aot-technologies/formio-react";
+import { Form } from "react-formio";
 import {  fetchFormById } from "../api/services/filterServices";
 interface FormSelectionModalProps {
   showModal: boolean;

@@ -1,7 +1,7 @@
 // rootReducer.ts (or wherever createRootReducer is defined)
 import { combineReducers } from "@reduxjs/toolkit";
 import { connectRouter } from "connected-react-router"; 
-import { form, submission } from "@aot-technologies/formio-react";
+import { form, submission } from "react-formio";
 import TaskHandler from "./taskReducer";
 import { History } from 'history';
 import customSubmission from "./customSubmissionReducer";
